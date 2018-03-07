@@ -76,10 +76,11 @@ export default class App extends Component<Props> {
     const id = 100+ this.state.records.length;
     const newRecord ={id,weigth,date};
     let records2 =[...this.state.records];
-
-    records2.push(newRecord);
+    records2.splice(0,0,newRecord);
+    //records2.push(newRecord);
     //ACTUALZIAR EL ESTADO
     this.setState({records:records2});
+
   }
 
   renderRecords(){

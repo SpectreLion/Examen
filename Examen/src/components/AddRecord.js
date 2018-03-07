@@ -28,27 +28,26 @@ export default class AddRecord extends Component<Props> {
       const regexValidation = /^(\d)+\.*\d{0,2}$/;
       //Add Validation here, you can investigate hot to test a Regular Expression on JavaScript.
       if(regexValidation.test(text)){
-        this.setState({ recordWeigth: text });
-        return true
-      }else{
-        return false;
+        this.setState({recordWeigth: text });
       }
     }
-
   render() {
     const helper = new Helper();
     const fecha = helper.formatDate( new Date(),false);
     const fechaFinal = Date.now();
+    //
     return (
       <View style={styles.container}>
         <View style={styles.inputsContainer}>
           <TextInput
               onChangeText={(text)=> {this.validateWeight(text)}}
               style={styles.inputText}
-              autoCorrect={true}
+              autoCorrect={false}
               underlineColorAndroid='transparent'
-              keyboardType='numeric'
-              placeholder={'Peso'}/>
+              placeholder={'Peso'}
+              value={this.state.recordWeigth}
+              clearButtonMode="while-editing"
+              />
           <TextInput
               style={styles.inputText}
               editable={false}
@@ -56,7 +55,7 @@ export default class AddRecord extends Component<Props> {
               />
         </View>
         <View style={styles.actionContainer}>
-          <TouchableHighlight style={styles.addButton} onPress={ ()=>{ this.props.newRecord(this.state.recordWeigth,fechaFinal)}}>
+          <TouchableHighlight style={styles.addButton} onPress={()=>{this.props.newRecord(this.state.recordWeigth,fechaFinal)}}>
             <Text style={styles.addButtonText}>AGREGAR</Text>
           </TouchableHighlight>
         </View>
