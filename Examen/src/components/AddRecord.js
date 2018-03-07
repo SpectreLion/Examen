@@ -16,30 +16,47 @@ import {
 import Helper from './../shared/Helper';
 
 export default class AddRecord extends Component<Props> {
+  constructor(props){
+    super(props);
+    this.state = {
+      recordWeigth: '',
+      recordDate: ''
+    }
+  }
 
   validateWeight(text){
       const regexValidation = /^(\d)+\.*\d{0,2}$/;
       //Add Validation here, you can investigate hot to test a Regular Expression on JavaScript.
+      if(regexValidation.test(text)){
+        this.setState({ recordWeigth: text });
+        return true
+      }else{
+        return false;
+      }
     }
 
   render() {
     const helper = new Helper();
+    const fecha = helper.formatDate( new Date(),false);
+    const fechaFinal = Date.now();
     return (
       <View style={styles.container}>
         <View style={styles.inputsContainer}>
           <TextInput
+              onChangeText={(text)=> {this.validateWeight(text)}}
               style={styles.inputText}
-              autoCorrect={false}
+              autoCorrect={true}
               underlineColorAndroid='transparent'
+              keyboardType='numeric'
               placeholder={'Peso'}/>
           <TextInput
               style={styles.inputText}
               editable={false}
-              value={helper.formatDate( new Date(),false )}
+              value={fecha}
               />
         </View>
         <View style={styles.actionContainer}>
-          <TouchableHighlight style={styles.addButton}>
+          <TouchableHighlight style={styles.addButton} onPress={ ()=>{ this.props.newRecord(this.state.recordWeigth,fechaFinal)}}>
             <Text style={styles.addButtonText}>AGREGAR</Text>
           </TouchableHighlight>
         </View>

@@ -18,7 +18,7 @@ export default class CurrentWeight extends Component<Props> {
     return (
       <View style={styles.container}>
         <Text style={styles.currentText}>Actual</Text>
-        <Text style={styles.weigthText}>95.0 kg</Text>
+        <Text style={styles.weigthText}>{this.props.lastRecord} kg</Text>
       </View>
     );
   }

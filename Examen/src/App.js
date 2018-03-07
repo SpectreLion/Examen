@@ -30,54 +30,92 @@ export default class App extends Component<Props> {
         { id: 4, weigth: 94, date: 1512147600000 },
         { id: 5, weigth: 93.5, date: 1512147600000 },
         { id: 6, weigth: 87.5, date: 1508770800000 }
-      ]
+      ],
+      asDate:true,
+      asPeso:true
     }
-    asDate=false;
-    asPeso=false;
+
   }
-  orderRecords(as){
+  orderRecords(){
     //Copiar estado
-    let currentRecord =[...this.state.tasks];
+    let currentRecord =[...this.state.records];
     //actualizar estado
-    if(as){
+    if(this.state.asDate){
       currentRecord.sort((a, b) => a.date - b.date);
+        this.setState({asDate: false});
     }else {
       currentRecord.sort((a, b) => b.date - a.date);
+        this.setState({asDate: true});
     }
     this.setState({records:currentRecord});
-    asDate=!asDate;
-    renderRecords();
+  }
+
+  orderRecordsWeigth(){
+    //Copiar estado
+    let currentRecord =[...this.state.records];
+    //actualizar estado
+    if(this.state.asPeso){
+      currentRecord.sort((a, b) => a.weigth - b.weigth);
+        this.setState({asPeso: false});
+    }else {
+      currentRecord.sort((a, b) => b.weigth - a.weigth);
+        this.setState({asPeso: true});
+    }
+    this.setState({records:currentRecord});
+  }
+
+  lastRecord(){
+    let currentRecord2 =[...this.state.records];
+    currentRecord2.sort((a, b) => b.date - a.date);
+
+    return currentRecord2[0].weigth;
+  }
+
+  newRecord(weigth,date){
+
+    const id = 100+ this.state.records.length;
+    const newRecord ={id,weigth,date};
+    let records2 =[...this.state.records];
+
+    records2.push(newRecord);
+    //ACTUALZIAR EL ESTADO
+    this.setState({records:records2});
   }
 
   renderRecords(){
     return(
       this.state.records.map((records)=>{
           return(
-            <RecordsContents key= {records.id} records={records} />
+            <RecordsContents records={records} />
           )
       })
     )
   }
 
   render() {
+    const {asDate}= this.state;
+    const {asPeso}= this.state;
+    const textFecha=asDate?"Fecha ▲":"Fecha ▼";
+    const textPeso=asPeso?"Peso ▲":"Peso ▼";
+
     return (
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Registros de Peso</Text>
         </View>
         <View style={styles.currentWeight}>
-          <CurrentWeight/>
+          <CurrentWeight lastRecord= {this.lastRecord()}/>
         </View>
         <View style={styles.newRecord}>
-          <AddRecord/>
+          <AddRecord newRecord={this.newRecord.bind(this)}/>
         </View>
         <View style={styles.records}>
           <View style={styles.recordsBar}>
-            <TouchableHighlight >
-              <Text style={styles.touchableBarText}>PESO</Text>
+            <TouchableHighlight onPress={ ()=> {this.orderRecordsWeigth()}} >
+              <Text style={styles.touchableBarText}>{textPeso}</Text>
             </TouchableHighlight>
-            <TouchableHighlight onPress={ ()=> {this.orderRecords.bind(this,asDate)}}>
-              <Text style={styles.touchableBarText} >FECHA</Text>
+            <TouchableHighlight onPress={ ()=> {this.orderRecords()}}>
+              <Text style={styles.touchableBarText} >{textFecha}</Text>
           </TouchableHighlight>
           </View>
           <ScrollView style={styles.recordsContent}>
